@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,17 +27,25 @@ fun NumberPad(
 ) {
     val state by sudokuViewModel.uiState.collectAsState()
     val selectedIndex = state.selectedIndex
-    FlowColumn {
+    FlowColumn(modifier = modifier.padding(8.dp)) {
         FlowRow(
             modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.End,
+        ) {
+            OptionBar()
+        }
+
+        FlowRow(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
         ) {
             (1..9).forEach { number ->
                 IconButton(
                     onClick = {
                         if (selectedIndex != null) {
-                        sudokuViewModel.enterNumber(selectedIndex, number)
-                    }},
+                            sudokuViewModel.enterNumber(selectedIndex, number)
+                        }
+                    },
                     modifier = modifier.size(40.dp)
                 ) {
                     Text("$number", fontSize = 40.sp)
