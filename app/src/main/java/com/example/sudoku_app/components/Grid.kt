@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,20 +26,15 @@ import com.example.sudoku_app.viewmodel.SudokuViewModel
 
 @Composable
 fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewModel()) {
+    //PlaceHolder Board
+    val board: List<Int> = List(81) { 0 }
+
 
     val state by sudokuViewModel.uiState.collectAsState()
-    val board = state.board
     val selectedIndex = state.selectedIndex
     val columnIndices = state.columnIndexList
     val rowIndices = state.rowIndexList
     val squareIndices = state.squareIndexList
-    val flattenedBoard = buildList {
-        for (row in 0 until 9) {
-            for (col in 0 until 9) {
-                add(board.cells[row][col])
-            }
-        }
-    }
 
     Column(modifier = modifier.background(Color.White)) {
         Box(
@@ -54,7 +48,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                 verticalArrangement = Arrangement.Center,
                 columns = GridCells.Fixed(9)
             ) {
-                flattenedBoard.forEachIndexed { index, cell ->
+                board.forEachIndexed { index, cell ->
                     val isSelectedCell = index == selectedIndex  // This specific cell is selected
                     val isInColumn = index in columnIndices
                     val isInRow = index in rowIndices
@@ -80,14 +74,9 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = cell.value?.toString() ?: "",
-                                color = when {
-                                    isSelectedCell -> Color.White
-                                    cell.isFixed -> Color.Black
-                                    else -> Color(0xFF1976D2)
-                                },
+                                text = "1",
+                                color = Color.Black,
                                 fontSize = 20.sp,
-                                fontWeight = if (cell.isFixed) FontWeight.Bold else FontWeight.Normal
                             )
                         }
                     }
@@ -139,4 +128,5 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
 @Composable
 fun PreviewGrid() {
     Grid()
+    NumberPad()
 }

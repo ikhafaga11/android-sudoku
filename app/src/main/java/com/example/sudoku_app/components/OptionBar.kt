@@ -13,15 +13,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sudoku_app.R
+import com.example.sudoku_app.viewmodel.SudokuViewModel
 
 @Composable
-fun OptionBar(modifier: Modifier = Modifier) {
+fun OptionBar(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel) {
     FlowRow(
 //        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
         itemVerticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = {}) {
+        IconButton(onClick = {sudokuViewModel.noteMode()}) {
             Icon(
                 painter = painterResource(R.drawable.pencil),
                 contentDescription = "Pencil",
@@ -34,10 +35,10 @@ fun OptionBar(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewPencil() {
-    OptionBar()
-}
-
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewPencil() {
+//    OptionBar()
+//}
+//
 

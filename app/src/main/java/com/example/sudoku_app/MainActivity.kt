@@ -34,7 +34,7 @@ fun App() {
         composable(route = "home") {
             HomeScreen(onGameStart = {
                 navController.navigate("game")
-            }, sudokuViewModel = sudokuViewModel)
+            })
         }
         composable(route = "game") {
             GameScreen(sudokuViewModel = sudokuViewModel)

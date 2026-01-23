@@ -27,12 +27,14 @@ fun NumberPad(
 ) {
     val state by sudokuViewModel.uiState.collectAsState()
     val selectedIndex = state.selectedIndex
+    val isNoteMode = state.isNoteMode
+
     FlowColumn(modifier = modifier.padding(8.dp)) {
         FlowRow(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            OptionBar()
+            OptionBar(sudokuViewModel = sudokuViewModel)
         }
 
         FlowRow(
@@ -41,11 +43,7 @@ fun NumberPad(
         ) {
             (1..9).forEach { number ->
                 IconButton(
-                    onClick = {
-                        if (selectedIndex != null) {
-                            sudokuViewModel.enterNumber(selectedIndex, number)
-                        }
-                    },
+                    onClick = {},
                     modifier = modifier.size(40.dp)
                 ) {
                     Text("$number", fontSize = 40.sp)
