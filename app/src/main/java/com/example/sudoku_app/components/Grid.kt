@@ -128,5 +128,4 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
 @Composable
 fun PreviewGrid() {
     Grid()
-    NumberPad()
 }
