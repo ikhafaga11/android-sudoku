@@ -5,7 +5,6 @@ class SudokuGenerator {
     val cols: Array<BooleanArray> = Array(9) { BooleanArray(10) }
     val grids: Array<BooleanArray> = Array(9) { BooleanArray(10) }
     val board: Array<IntArray> = Array(9) { IntArray(9) }
-    var isBoardComplete: Boolean = false
 
     fun gridIndex (r: Int,c: Int): Int {
         return (r/3) * 3 + (c/3)
@@ -23,11 +22,7 @@ class SudokuGenerator {
         return legalValues
     }
 
-    fun generateRandomValue(domain: MutableList<Int>): Int {
-        return  domain.random()
-    }
-
-    fun mostConstrainedCell(): Triple<Int, Int, Int> {
+    fun mostConstrainedCell(): Triple<Int, Int, MutableList<Int>> {
         var smallestDomainSize: Int = Int.MAX_VALUE
         var bestDomain: MutableList<Int> = mutableListOf<Int>()
         var bestRow: Int = Int.MIN_VALUE
@@ -49,35 +44,41 @@ class SudokuGenerator {
             }
         }
 
-        return Triple(bestRow, bestCol, generateRandomValue(bestDomain))
+        return Triple(bestRow, bestCol, bestDomain)
     }
 
-    fun boardCompletionCheck(){
+    fun boardCompletionCheck(): Boolean{
         for(row in 0..8) {
             for(col in 0..8){
-                if(board[row][col] == 0) return
+                if(board[row][col] == 0) return false
             }
         }
 
-        isBoardComplete = true
+        return true
     }
 
-    fun generate() {
+    fun solve(): Boolean {
+        if (boardCompletionCheck()){ return true }
 
-        while(!isBoardComplete) {
-            val (r, c, v) = mostConstrainedCell()
+        val (r, c, domain) = mostConstrainedCell()
 
-            if (board[r][c] != 0) continue
-            if (cols[c][v]) continue
-            if (rows[r][v]) continue
-            if (grids[gridIndex(r, c)][v]) continue
-
+        for(v in domain.shuffled()){
             board[r][c] = v
             rows[r][v] = true
             cols[c][v] = true
             grids[gridIndex(r, c)][v] = true
-            boardCompletionCheck()
 
+            if (solve()){
+                return true}
+
+            board[r][c] = 0
+            rows[r][v] = false
+            cols[c][v] = false
+            grids[gridIndex(r, c)][v] = false
         }
+
+        return false
+
     }
+
 }
