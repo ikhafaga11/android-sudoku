@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,7 +32,9 @@ class MainActivity : ComponentActivity() {
 fun App() {
     val navController = rememberNavController()
     val sudokuViewModel: SudokuViewModel = viewModel()
+    val state by sudokuViewModel.uiState.collectAsState()
     NavHost(navController = navController, startDestination = "home") {
+
         composable(route = "home") {
             HomeScreen(onGameStart = {
                 navController.navigate("game")
@@ -38,6 +42,7 @@ fun App() {
         }
         composable(route = "game") {
             GameScreen(sudokuViewModel = sudokuViewModel)
+            sudokuViewModel.generateBoard()
         }
     }
 }

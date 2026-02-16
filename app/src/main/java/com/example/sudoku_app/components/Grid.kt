@@ -27,14 +27,13 @@ import com.example.sudoku_app.viewmodel.SudokuViewModel
 @Composable
 fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewModel()) {
     //PlaceHolder Board
-    val board: List<Int> = List(81) { 0 }
-
 
     val state by sudokuViewModel.uiState.collectAsState()
     val selectedIndex = state.selectedIndex
     val columnIndices = state.columnIndexList
     val rowIndices = state.rowIndexList
     val squareIndices = state.squareIndexList
+    val board = state.board.flatMap { it.toList() }
 
     Column(modifier = modifier.background(Color.White)) {
         Box(
@@ -74,7 +73,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "1",
+                                text = "$cell",
                                 color = Color.Black,
                                 fontSize = 20.sp,
                             )

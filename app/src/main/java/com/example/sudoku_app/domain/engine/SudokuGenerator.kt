@@ -78,7 +78,10 @@ class SudokuGenerator {
         }
 
         return false
-
     }
 
+    fun generateSudokuBoard(): Array<IntArray> {
+        solve()
+        return board
+    }
 }

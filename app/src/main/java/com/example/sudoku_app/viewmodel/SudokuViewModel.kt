@@ -1,6 +1,7 @@
 package com.example.sudoku_app.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.sudoku_app.domain.engine.SudokuGenerator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,10 +12,12 @@ data class GameUIState(
     val squareIndexList: List<Int> = emptyList(),
     val rowIndexList: List<Int> = emptyList(),
     val isNoteMode: Boolean = false,
+    val board: Array<IntArray> = Array(9) { IntArray(9) }
 )
 
 class SudokuViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(GameUIState())
+    private val generator = SudokuGenerator()
     val uiState: StateFlow<GameUIState> = _uiState.asStateFlow()
 
     fun noteMode() {
@@ -89,4 +92,11 @@ class SudokuViewModel : ViewModel() {
         }
     }
 
+    fun generateBoard(){
+        val newBoard = generator.generateSudokuBoard()
+
+        _uiState.value = _uiState.value.copy(
+            board = newBoard
+        )
+    }
 }
