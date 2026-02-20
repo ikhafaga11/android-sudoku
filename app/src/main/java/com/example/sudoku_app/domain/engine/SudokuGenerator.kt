@@ -23,28 +23,29 @@ class SudokuGenerator {
     }
 
     fun mostConstrainedCell(): Triple<Int, Int, MutableList<Int>> {
-        var smallestDomainSize: Int = Int.MAX_VALUE
-        var bestDomain: MutableList<Int> = mutableListOf<Int>()
-        var bestRow: Int = Int.MIN_VALUE
-        var bestCol: Int = Int.MIN_VALUE
+        var smallest: Int = Int.MAX_VALUE
+        val candidates: MutableList<Triple<Int, Int, MutableList<Int>>> = mutableListOf()
 
         for(r in 0..8) {
             for(c in 0..8) {
                 if (board[r][c] == 0) {
-                    val currentDomain = legalValues(r, c)
+                    val domain = legalValues(r, c)
 
-
-                    if (currentDomain.size < smallestDomainSize) {
-                        smallestDomainSize = currentDomain.size
-                        bestRow = r
-                        bestCol = c
-                        bestDomain = currentDomain
+                    when {
+                        domain.size < smallest -> {
+                            smallest = domain.size
+                            candidates.clear()
+                            candidates.add(Triple(r, c, domain))
+                        }
+                        domain.size == smallest -> {
+                            candidates.add(Triple(r,c,domain))
+                        }
                     }
                 }
             }
         }
 
-        return Triple(bestRow, bestCol, bestDomain)
+        return candidates.random()
     }
 
     fun boardCompletionCheck(): Boolean{
