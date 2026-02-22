@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 data class GameUIState(
     val selectedIndex: Int? = null,
+    val selectedIndexValue: Int? = null,
     val columnIndexList: List<Int> = emptyList(),
     val squareIndexList: List<Int> = emptyList(),
     val rowIndexList: List<Int> = emptyList(),
@@ -65,10 +66,11 @@ class SudokuViewModel : ViewModel() {
         )
     }
 
-    fun onSelectedIndex(index: Int) {
+    fun onSelectedIndex(index: Int, cell: Int) {
         if (_uiState.value.selectedIndex == null) {
             _uiState.value = _uiState.value.copy(
-                selectedIndex = index
+                selectedIndex = index,
+                selectedIndexValue = cell
             )
             highlightColumn(index)
             highlightRow(index)
@@ -76,7 +78,9 @@ class SudokuViewModel : ViewModel() {
         } else if (_uiState.value.selectedIndex != index) {
 
             _uiState.value = _uiState.value.copy(
-                selectedIndex = index
+                selectedIndex = index,
+                selectedIndexValue = cell
+
             )
             highlightColumn(index)
             highlightRow(index)
@@ -84,6 +88,7 @@ class SudokuViewModel : ViewModel() {
         } else {
             _uiState.value = _uiState.value.copy(
                 selectedIndex = null,
+                selectedIndexValue = null,
                 columnIndexList = emptyList(),
                 rowIndexList = emptyList(),
                 squareIndexList = emptyList()

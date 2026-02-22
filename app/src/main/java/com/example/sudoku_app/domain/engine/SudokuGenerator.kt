@@ -71,7 +71,6 @@ class SudokuGenerator {
 
             if (solve()){
                 return true}
-
             board[r][c] = 0
             rows[r][v] = false
             cols[c][v] = false

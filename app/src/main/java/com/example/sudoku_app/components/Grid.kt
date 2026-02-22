@@ -1,5 +1,6 @@
 package com.example.sudoku_app.components
 
+import android.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,10 +32,11 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
 
     val state by sudokuViewModel.uiState.collectAsState()
     val selectedIndex = state.selectedIndex
+    val onSelectedValue = state.selectedIndexValue
     val columnIndices = state.columnIndexList
     val rowIndices = state.rowIndexList
     val squareIndices = state.squareIndexList
-    val board = state.board.flatMap { it.toList() }
+    val board: List<Int> = state.board.flatMap { it.toList() }
 
     Column(modifier = modifier.background(Color.White)) {
         Box(
@@ -48,10 +51,13 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                 columns = GridCells.Fixed(9)
             ) {
                 board.forEachIndexed { index, cell ->
-                    val isSelectedCell = index == selectedIndex  // This specific cell is selected
+                    val isSelectedCell = index == selectedIndex
                     val isInColumn = index in columnIndices
                     val isInRow = index in rowIndices
                     val isInSquare = index in squareIndices
+                    val lightBlue = 0xFF00000
+                    val lightYellow = 0xFFFFC107
+                    val darkBlue = 0xFF1E88E5
 
                     items(1) {
                         Box(
@@ -59,23 +65,24 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                                 .aspectRatio(1f)
                                 .background(
                                     when {
-                                        isSelectedCell -> Color.Black
-                                        isInColumn -> Color.LightGray
-                                        isInRow -> Color.LightGray
-                                        isInSquare -> Color.LightGray
+                                        isSelectedCell -> Color(lightYellow)
+                                        isInColumn -> Color(lightBlue)
+                                        isInRow -> Color(lightBlue)
+                                        isInSquare -> Color(lightBlue)
                                         else -> Color.Transparent
 
                                     }
                                 )
                                 .clickable {
-                                    sudokuViewModel.onSelectedIndex(index)
+                                    sudokuViewModel.onSelectedIndex(index, cell)
                                 },
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "$cell",
-                                color = Color.Black,
-                                fontSize = 20.sp,
+                                color = if(cell == onSelectedValue) Color(darkBlue) else Color.Black,
+                                fontSize = if(cell == onSelectedValue) 25.sp else 20.sp,
+                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal
                             )
                         }
                     }
