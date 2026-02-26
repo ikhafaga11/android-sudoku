@@ -1,6 +1,5 @@
 package com.example.sudoku_app.components
 
-import android.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,9 +54,9 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                     val isInColumn = index in columnIndices
                     val isInRow = index in rowIndices
                     val isInSquare = index in squareIndices
-                    val lightBlue = 0xFF00000
-                    val lightYellow = 0xFFFFC107
-                    val darkBlue = 0xFF1E88E5
+                    val lightBlue = 0xFF00000 // experiment
+                    val lightYellow = 0xFFFFC107 // experiment
+                    val darkBlue = 0xFF1E88E5 // experiment
 
                     items(1) {
                         Box(
@@ -79,7 +78,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "$cell",
+                                text = if(cell == 0) "" else "$cell",
                                 color = if(cell == onSelectedValue) Color(darkBlue) else Color.Black,
                                 fontSize = if(cell == onSelectedValue) 25.sp else 20.sp,
                                 fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal
