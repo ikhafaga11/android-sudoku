@@ -32,17 +32,16 @@ class MainActivity : ComponentActivity() {
 fun App() {
     val navController = rememberNavController()
     val sudokuViewModel: SudokuViewModel = viewModel()
-    val state by sudokuViewModel.uiState.collectAsState()
     NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "home") {
             HomeScreen(onGameStart = {
                 navController.navigate("game")
+                sudokuViewModel.generateBoard()
             })
         }
         composable(route = "game") {
             GameScreen(sudokuViewModel = sudokuViewModel)
-            sudokuViewModel.generateBoard()
         }
     }
 }
