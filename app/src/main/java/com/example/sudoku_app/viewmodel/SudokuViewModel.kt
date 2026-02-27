@@ -98,6 +98,23 @@ class SudokuViewModel : ViewModel() {
         }
     }
 
+    fun inputNumber(i: Int?, v: Int?) {
+        i ?: return
+        v ?: return
+
+        val r = i / 9
+        val c = i % 9
+        if( _uiState.value.puzzleBoard[r][c] != 0) return
+        if( _uiState.value.solutionBoard[r][c] != v) return
+        val newBoard = Array(9){_uiState.value.puzzleBoard[it].clone()}
+        newBoard[r][c] = v
+
+        _uiState.value = _uiState.value.copy(
+            puzzleBoard = newBoard
+        )
+    }
+
+
     fun generateBoard( ){
         val (sb, pb) = generator.generateBoards()
         _uiState.value = _uiState.value.copy(
