@@ -58,7 +58,7 @@ class SudokuGenerator {
         return true
     }
 
-    fun solution(): Boolean {
+    fun generateSolution(): Boolean {
         if (boardCompletionCheck()){ return true }
 
         val (r, c, domain) = mostConstrainedCell()
@@ -69,7 +69,7 @@ class SudokuGenerator {
             cols[c][v] = true
             grids[gridIndex(r, c)][v] = true
 
-            if (solution()){
+            if (generateSolution()){
                 return true}
             board[r][c] = 0
             rows[r][v] = false
@@ -114,7 +114,7 @@ class SudokuGenerator {
             grids[gridIndex(r,c)][v] = false
         }
     }
-    fun puzzleBoard (count: Int=0, difficulty: Int=30): Boolean {
+    fun generatePuzzle (count: Int=0, difficulty: Int=30): Boolean {
         if(count == difficulty) return true
 
         val candidates = mutableListOf<Pair<Int,Int>>()
@@ -129,7 +129,7 @@ class SudokuGenerator {
         grids[gridIndex(r,c)][v] = false
         val forced = forcedCells()
 
-        if(puzzleBoard(count + 1, difficulty)) return true
+        if(generatePuzzle(count + 1, difficulty)) return true
 
         board[r][c] = v
         rows[r][v] = true
@@ -141,9 +141,16 @@ class SudokuGenerator {
         return false
     }
 
-    fun generateSudokuBoard(): Array<IntArray> {
-        solution()
-        puzzleBoard()
-        return board
+    fun generateBoards(): Pair<Array<IntArray>,Array<IntArray>>{
+
+        generateSolution()
+
+        val solutionBoard = Array(9) {board[it].clone()}
+
+        generatePuzzle()
+
+        val puzzleBoard = Array(9) {board[it].clone()}
+
+        return (solutionBoard to puzzleBoard)
     }
 }

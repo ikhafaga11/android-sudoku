@@ -41,7 +41,7 @@ fun NumberPad(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            (1..9).forEach { number ->
+            (1..9).forEachIndexed { i, number ->
                 IconButton(
                     onClick = {},
                     modifier = modifier.size(40.dp)

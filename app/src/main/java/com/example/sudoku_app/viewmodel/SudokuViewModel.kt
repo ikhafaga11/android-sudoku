@@ -13,7 +13,8 @@ data class GameUIState(
     val squareIndexList: List<Int> = emptyList(),
     val rowIndexList: List<Int> = emptyList(),
     val isNoteMode: Boolean = false,
-    val board: Array<IntArray> = Array(9) { IntArray(9) }
+    val puzzleBoard: Array<IntArray> = Array(9){ IntArray(9) },
+    val solutionBoard: Array<IntArray> = Array(9){IntArray(9)},
 )
 
 class SudokuViewModel : ViewModel() {
@@ -97,11 +98,11 @@ class SudokuViewModel : ViewModel() {
         }
     }
 
-    fun generateBoard(){
-        val newBoard = generator.generateSudokuBoard()
-
+    fun generateBoard( ){
+        val (sb, pb) = generator.generateBoards()
         _uiState.value = _uiState.value.copy(
-            board = newBoard
+            solutionBoard = sb,
+            puzzleBoard = pb,
         )
     }
 }
