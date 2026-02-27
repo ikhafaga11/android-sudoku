@@ -1,5 +1,6 @@
 package com.example.sudoku_app.components
 
+import android.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Text
@@ -35,6 +37,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
     val rowIndices = state.rowIndexList
     val squareIndices = state.squareIndexList
     val board: List<Int> = state.puzzleBoard.flatMap { it.toList() }
+    val notesBoard: List<MutableSet<Int>> = state.notesBoard.flatMap { it.toList() }
 
     Column(modifier = modifier.background(Color.White)) {
         Box(
@@ -48,7 +51,10 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                 verticalArrangement = Arrangement.Center,
                 columns = GridCells.Fixed(9)
             ) {
-                board.forEachIndexed { index, cell ->
+                items(81) { index ->
+                    val cell = board[index]
+                    val notes = notesBoard[index]
+                    val noteSize = notes.size
                     val isSelectedCell = index == selectedIndex
                     val isInColumn = index in columnIndices
                     val isInRow = index in rowIndices
@@ -56,8 +62,6 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                     val lightBlue = 0xFF00000 // experiment
                     val lightYellow = 0xFFFFC107 // experiment
                     val darkBlue = 0xFF1E88E5 // experiment
-
-                    items(1) {
                         Box(
                             modifier = modifier
                                 .aspectRatio(1f)
@@ -73,17 +77,17 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                                 )
                                 .clickable {
                                     sudokuViewModel.onSelectedIndex(index, cell)
-                                },
+                                }.padding(5.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = if(cell == 0) "" else "$cell",
-                                color = if(cell == onSelectedValue) Color(darkBlue) else Color.Black,
-                                fontSize = if(cell == onSelectedValue) 25.sp else 20.sp,
-                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal
+                                text = if(cell == 0) notes.joinToString("") else "$cell",
+                                color = if(notes.isEmpty()){if(cell == onSelectedValue) Color(darkBlue) else Color.Black} else{
+                                    Color.Red},
+                                fontSize = if(notes.isEmpty()){if(cell == onSelectedValue) 25.sp else 20.sp} else {if (noteSize > 5) 5.sp else 10.sp},
+                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal,
                             )
                         }
-                    }
                 }
             }
             Canvas(

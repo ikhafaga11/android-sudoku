@@ -15,6 +15,7 @@ data class GameUIState(
     val isNoteMode: Boolean = false,
     val puzzleBoard: Array<IntArray> = Array(9){ IntArray(9) },
     val solutionBoard: Array<IntArray> = Array(9){IntArray(9)},
+    val notesBoard: Array<Array<MutableSet<Int>>> = Array(9) { Array(9) { mutableSetOf<Int>() }}
 )
 
 class SudokuViewModel : ViewModel() {
@@ -98,7 +99,26 @@ class SudokuViewModel : ViewModel() {
         }
     }
 
+    fun inputNote(i: Int?, v: Int?){
+        if(!_uiState.value.isNoteMode) return
+        i ?: return
+        v ?:  return
+        val r = i / 9
+        val c = i % 9
+        if(_uiState.value.puzzleBoard[r][c] != 0) return
+
+        val newNotesBoard = Array(9){ _uiState.value.notesBoard[it].clone() }
+        val cell: MutableSet<Int> = newNotesBoard[r][c]
+
+        if(cell.contains(v)) cell.remove(v) else cell.add(v)
+
+        _uiState.value = _uiState.value.copy(
+            notesBoard = newNotesBoard
+        )
+    }
+
     fun inputNumber(i: Int?, v: Int?) {
+        if(_uiState.value.isNoteMode) return
         i ?: return
         v ?: return
 

@@ -43,7 +43,11 @@ fun NumberPad(
         ) {
             (1..9).forEach { number ->
                 IconButton(
-                    onClick = {sudokuViewModel.inputNumber(selectedIndex, number)},
+                    onClick = if(isNoteMode) {
+                        { sudokuViewModel.inputNote(selectedIndex, number) }
+                    } else {
+                        { sudokuViewModel.inputNumber(selectedIndex, number) }
+                    },
                     modifier = modifier.size(40.dp)
                 ) {
                     Text("$number", fontSize = 40.sp)
