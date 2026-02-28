@@ -127,10 +127,13 @@ class SudokuViewModel : ViewModel() {
         if( _uiState.value.puzzleBoard[r][c] != 0) return
         if( _uiState.value.solutionBoard[r][c] != v) return
         val newBoard = Array(9){_uiState.value.puzzleBoard[it].clone()}
+        val newNoteBoard = Array(9){_uiState.value.notesBoard[it].clone()}
         newBoard[r][c] = v
+        newNoteBoard[r][c].removeAll(1..9)
 
         _uiState.value = _uiState.value.copy(
-            puzzleBoard = newBoard
+            puzzleBoard = newBoard,
+            notesBoard = newNoteBoard
         )
     }
 

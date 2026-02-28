@@ -77,11 +77,16 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                                 )
                                 .clickable {
                                     sudokuViewModel.onSelectedIndex(index, cell)
-                                }.padding(5.dp),
+                                }
+                                .padding(5.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = if(cell == 0) notes.joinToString("") else "$cell",
+                                text = if(cell == 0) {
+                                    notes.joinToString("")
+                                } else {
+                                    "$cell"
+                                },
                                 color = if(notes.isEmpty()){if(cell == onSelectedValue) Color(darkBlue) else Color.Black} else{
                                     Color.Red},
                                 fontSize = if(notes.isEmpty()){if(cell == onSelectedValue) 25.sp else 20.sp} else {if (noteSize > 5) 5.sp else 10.sp},
