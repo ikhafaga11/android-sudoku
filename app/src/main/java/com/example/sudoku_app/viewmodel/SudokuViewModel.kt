@@ -15,7 +15,8 @@ data class GameUIState(
     val isNoteMode: Boolean = false,
     val puzzleBoard: Array<IntArray> = Array(9){ IntArray(9) },
     val solutionBoard: Array<IntArray> = Array(9){IntArray(9)},
-    val notesBoard: Array<Array<MutableSet<Int>>> = Array(9) { Array(9) { mutableSetOf<Int>() }}
+    val notesBoard: Array<Array<MutableSet<Int>>> = Array(9) { Array(9) { mutableSetOf<Int>() }},
+    val lives: Int = 5
 )
 
 class SudokuViewModel : ViewModel() {
@@ -125,15 +126,23 @@ class SudokuViewModel : ViewModel() {
         val r = i / 9
         val c = i % 9
         if( _uiState.value.puzzleBoard[r][c] != 0) return
-        if( _uiState.value.solutionBoard[r][c] != v) return
+
+        var newLifeCount = _uiState.value.lives
         val newBoard = Array(9){_uiState.value.puzzleBoard[it].clone()}
         val newNoteBoard = Array(9){_uiState.value.notesBoard[it].clone()}
+
+        if( _uiState.value.solutionBoard[r][c] != v) {
+            newLifeCount -= 1
+
+        } else {
         newBoard[r][c] = v
         newNoteBoard[r][c].removeAll(1..9)
+        }
 
         _uiState.value = _uiState.value.copy(
             puzzleBoard = newBoard,
-            notesBoard = newNoteBoard
+            notesBoard = newNoteBoard,
+            lives = newLifeCount
         )
     }
 
