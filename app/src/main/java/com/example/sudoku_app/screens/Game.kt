@@ -55,7 +55,7 @@ fun GameScreen(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(10.dp)
-                .weight(2f),
+                .weight(4f),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -65,7 +65,7 @@ fun GameScreen(
         HorizontalDivider(thickness = 2.dp)
 
         Row(modifier = modifier
-            .weight(1.5f)
+            .weight(1f)
             .padding(top = 16.dp)) {
             NumberPad(sudokuViewModel = sudokuViewModel)
         }
