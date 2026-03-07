@@ -21,7 +21,8 @@ fun TopBar(
 ) {
 
     val state by sudokuViewModel.uiState.collectAsState()
-    val livesCount = state.lives
+    val mistakeCount = state.mistakeCount
+    val maxMistakeCount = state.maxMistakeCount
 
 
     FlowRow(
@@ -29,7 +30,7 @@ fun TopBar(
             .fillMaxWidth()
             .padding(16.dp), horizontalArrangement = Arrangement.End
     ) {
-        Text("Lives: $livesCount")
+        Text("Mistakes: $mistakeCount/$maxMistakeCount")
     }
 }
 
