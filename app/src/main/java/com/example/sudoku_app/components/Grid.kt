@@ -1,6 +1,5 @@
 package com.example.sudoku_app.components
 
-import android.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +29,6 @@ import com.example.sudoku_app.viewmodel.SudokuViewModel
 
 @Composable
 fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewModel()) {
-    //PlaceHolder Board
     val state by sudokuViewModel.uiState.collectAsState()
     val selectedIndex = state.selectedIndex
     val onSelectedValue = state.selectedIndexValue
@@ -38,6 +37,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
     val squareIndices = state.squareIndexList
     val board: List<Int> = state.puzzleBoard.flatMap { it.toList() }
     val notesBoard: List<MutableSet<Int>> = state.notesBoard.flatMap { it.toList() }
+    val mistakeBoard: List<Int> = state.mistakesBoard.flatMap { it.toList() }
 
     Column(modifier = modifier.background(Color.White)) {
         Box(
@@ -53,6 +53,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
             ) {
                 items(81) { index ->
                     val cell = board[index]
+                    val mistakeCell = mistakeBoard[index]
                     val notes = notesBoard[index]
                     val noteSize = notes.size
                     val isSelectedCell = index == selectedIndex
@@ -64,9 +65,11 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                     val darkBlue = 0xFF1E88E5 // experiment
                         Box(
                             modifier = modifier
+                                .alpha(if (mistakeCell != 0) 0.4f else 1f)
                                 .aspectRatio(1f)
                                 .background(
                                     when {
+                                        cell != 0 && cell == onSelectedValue -> Color(darkBlue)
                                         isSelectedCell -> Color(lightYellow)
                                         isInColumn -> Color(lightBlue)
                                         isInRow -> Color(lightBlue)
@@ -82,13 +85,16 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = if(cell == 0) {
-                                    notes.joinToString("")
-                                } else {
-                                    "$cell"
+                                text = when {
+                                    cell == 0 && mistakeCell == 0 -> notes.joinToString("")
+                                    mistakeCell != 0 -> "$mistakeCell"
+                                    else -> "$cell"
                                 },
-                                color = if(notes.isEmpty()){if(cell == onSelectedValue) Color(darkBlue) else Color.Black} else{
-                                    Color.Red},
+                                color = when{
+                                    mistakeCell != 0 -> Color.Red
+                                    notes.isNotEmpty() -> Color.Red
+                                    else -> Color.Black
+                                },
                                 fontSize = if(notes.isEmpty()){if(cell == onSelectedValue) 25.sp else 20.sp} else {if (noteSize > 5) 5.sp else 10.sp},
                                 fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal,
                             )

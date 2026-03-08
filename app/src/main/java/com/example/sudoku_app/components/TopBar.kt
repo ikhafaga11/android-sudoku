@@ -13,6 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sudoku_app.viewmodel.SudokuViewModel
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun TopBar(
@@ -28,9 +34,19 @@ fun TopBar(
     FlowRow(
         modifier
             .fillMaxWidth()
-            .padding(16.dp), horizontalArrangement = Arrangement.End
+            .padding(10.dp), horizontalArrangement = Arrangement.Start
     ) {
-        Text("Mistakes: $mistakeCount/$maxMistakeCount")
+        val text = "Mistakes: $mistakeCount / $maxMistakeCount"
+        Text(buildAnnotatedString {
+            text.split(" ").forEachIndexed{index, word ->
+                if(word == "$mistakeCount" && mistakeCount > 0){
+                    withStyle(SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold, fontSize = 20.sp)) {append(word)}
+                } else {
+                    append(word)
+                }
+                if(index != text.split(" ").lastIndex) append(" ")
+             }
+        })
     }
 }
 
