@@ -62,14 +62,14 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                     val isInSquare = index in squareIndices
                     val lightBlue = 0xFF00000 // experiment
                     val lightYellow = 0xFFFFC107 // experiment
-                    val darkBlue = 0xFF1E88E5 // experiment
+                    val blueLavender = 0xFFBBBBF7 // experiment
                         Box(
                             modifier = modifier
                                 .alpha(if (mistakeCell != 0) 0.4f else 1f)
                                 .aspectRatio(1f)
                                 .background(
                                     when {
-                                        cell != 0 && cell == onSelectedValue -> Color(darkBlue)
+                                        cell != 0 && cell == onSelectedValue -> Color(blueLavender)
                                         isSelectedCell -> Color(lightYellow)
                                         isInColumn -> Color(lightBlue)
                                         isInRow -> Color(lightBlue)
