@@ -96,7 +96,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                                     else -> Color.Black
                                 },
                                 fontSize = if(notes.isEmpty()){if(cell == onSelectedValue) 25.sp else 20.sp} else {if (noteSize > 5) 5.sp else 10.sp},
-                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal,
+//                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal,
                             )
                         }
                 }
