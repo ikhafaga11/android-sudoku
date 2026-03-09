@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +48,7 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
             LazyVerticalGrid(
                 modifier = modifier.matchParentSize(),
                 verticalArrangement = Arrangement.Center,
-                columns = GridCells.Fixed(9)
+                columns = GridCells.Fixed(9),     userScrollEnabled = false
             ) {
                 items(81) { index ->
                     val cell = board[index]
@@ -63,42 +62,46 @@ fun Grid(modifier: Modifier = Modifier, sudokuViewModel: SudokuViewModel = viewM
                     val lightBlue = 0xFF00000 // experiment
                     val lightYellow = 0xFFFFC107 // experiment
                     val blueLavender = 0xFFBBBBF7 // experiment
-                        Box(
-                            modifier = modifier
-                                .alpha(if (mistakeCell != 0) 0.4f else 1f)
-                                .aspectRatio(1f)
-                                .background(
-                                    when {
-                                        cell != 0 && cell == onSelectedValue -> Color(blueLavender)
-                                        isSelectedCell -> Color(lightYellow)
-                                        isInColumn -> Color(lightBlue)
-                                        isInRow -> Color(lightBlue)
-                                        isInSquare -> Color(lightBlue)
-                                        else -> Color.Transparent
+                    Box(
+                        modifier = modifier
+                            .alpha(if (mistakeCell != 0) 0.4f else 1f)
+                            .aspectRatio(1f)
+                            .background(
+                                when {
+                                    cell != 0 && cell == onSelectedValue -> Color(blueLavender)
+                                    isSelectedCell -> Color(lightYellow)
+                                    isInColumn -> Color(lightBlue)
+                                    isInRow -> Color(lightBlue)
+                                    isInSquare -> Color(lightBlue)
+                                    else -> Color.Transparent
 
-                                    }
-                                )
-                                .clickable {
-                                    sudokuViewModel.onSelectedIndex(index, cell)
                                 }
-                                .padding(5.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = when {
-                                    cell == 0 && mistakeCell == 0 -> notes.joinToString("")
-                                    mistakeCell != 0 -> "$mistakeCell"
-                                    else -> "$cell"
-                                },
-                                color = when{
-                                    mistakeCell != 0 -> Color.Red
-                                    notes.isNotEmpty() -> Color.Red
-                                    else -> Color.Black
-                                },
-                                fontSize = if(notes.isEmpty()){if(cell == onSelectedValue) 25.sp else 20.sp} else {if (noteSize > 5) 5.sp else 10.sp},
-//                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal,
                             )
-                        }
+                            .clickable {
+                                sudokuViewModel.onSelectedIndex(index, cell)
+                            }
+                            .padding(5.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = when {
+                                cell == 0 && mistakeCell == 0 -> notes.joinToString("")
+                                mistakeCell != 0 -> "$mistakeCell"
+                                else -> "$cell"
+                            },
+                            color = when {
+                                mistakeCell != 0 -> Color.Red
+                                notes.isNotEmpty() -> Color.Red
+                                else -> Color.Black
+                            },
+                            fontSize = if (notes.isEmpty()) {
+                                if (cell == onSelectedValue) 25.sp else 20.sp
+                            } else {
+                                if (noteSize > 5) 5.sp else 10.sp
+                            },
+//                                fontWeight = if(cell==onSelectedValue) FontWeight.Bold else FontWeight.Normal,
+                        )
+                    }
                 }
             }
             Canvas(
