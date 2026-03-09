@@ -15,8 +15,10 @@ data class GameUIState(
     val isNoteMode: Boolean = false,
     val puzzleBoard: Array<IntArray> = Array(9){ IntArray(9) },
     val solutionBoard: Array<IntArray> = Array(9){IntArray(9)},
+    val mistakesBoard: Array<IntArray> = Array(9){IntArray(9)},
     val notesBoard: Array<Array<MutableSet<Int>>> = Array(9) { Array(9) { mutableSetOf<Int>() }},
-    val lives: Int = 5
+    val mistakeCount: Int = 0,
+    val maxMistakeCount: Int = 3,
 )
 
 class SudokuViewModel : ViewModel() {
@@ -109,16 +111,21 @@ class SudokuViewModel : ViewModel() {
         if(_uiState.value.puzzleBoard[r][c] != 0) return
 
         val newNotesBoard = Array(9){ _uiState.value.notesBoard[it].clone() }
+        val newMistakeBoard = Array(9){_uiState.value.mistakesBoard[it].clone()}
         val cell: MutableSet<Int> = newNotesBoard[r][c]
 
         if(cell.contains(v)) cell.remove(v) else cell.add(v)
+        newMistakeBoard[r][c] = 0
+
 
         _uiState.value = _uiState.value.copy(
-            notesBoard = newNotesBoard
+            notesBoard = newNotesBoard,
+            mistakesBoard =  newMistakeBoard
         )
     }
 
     fun inputNumber(i: Int?, v: Int?) {
+        if(_uiState.value.mistakeCount == _uiState.value.maxMistakeCount) return
         if(_uiState.value.isNoteMode) return
         i ?: return
         v ?: return
@@ -127,22 +134,26 @@ class SudokuViewModel : ViewModel() {
         val c = i % 9
         if( _uiState.value.puzzleBoard[r][c] != 0) return
 
-        var newLifeCount = _uiState.value.lives
+        var newMistakeCount = _uiState.value.mistakeCount
         val newBoard = Array(9){_uiState.value.puzzleBoard[it].clone()}
         val newNoteBoard = Array(9){_uiState.value.notesBoard[it].clone()}
+        val newMistakeBoard = Array(9){_uiState.value.mistakesBoard[it].clone()}
 
-        if( _uiState.value.solutionBoard[r][c] != v) {
-            newLifeCount -= 1
-
+        if( _uiState.value.solutionBoard[r][c] != v && newMistakeCount < _uiState.value.maxMistakeCount) {
+            newMistakeBoard[r][c] = v
+            newNoteBoard[r][c].removeAll(1..9)
+            newMistakeCount += 1
         } else {
-        newBoard[r][c] = v
-        newNoteBoard[r][c].removeAll(1..9)
+            newBoard[r][c] = v
+            newNoteBoard[r][c].removeAll(1..9)
+            newMistakeBoard[r][c] = 0
         }
 
         _uiState.value = _uiState.value.copy(
             puzzleBoard = newBoard,
             notesBoard = newNoteBoard,
-            lives = newLifeCount
+            mistakesBoard = newMistakeBoard,
+            mistakeCount = newMistakeCount
         )
     }
 
