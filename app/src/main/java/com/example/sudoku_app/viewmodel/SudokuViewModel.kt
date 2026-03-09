@@ -109,6 +109,7 @@ class SudokuViewModel : ViewModel() {
         val r = i / 9
         val c = i % 9
         if(_uiState.value.puzzleBoard[r][c] != 0) return
+        if(v !in generator.legalValues(r,c)) return
 
         val newNotesBoard = Array(9){ _uiState.value.notesBoard[it].clone() }
         val newMistakeBoard = Array(9){_uiState.value.mistakesBoard[it].clone()}
